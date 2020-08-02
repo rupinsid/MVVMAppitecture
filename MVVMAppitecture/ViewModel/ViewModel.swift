@@ -44,12 +44,12 @@ class ViewModel {
         let session = MVVMSessionManager.shared
         let cache = MVVMCache.shared
         let imageUrlString = model.imageLink
-        if let data = cache.loadData(imageUrlString) {
-            completionHanlder(data, nil)
-            return
-        }
         guard let imageURL = URL(string: imageUrlString) else {
             completionHanlder(nil, MVVMError.invalidUrl)
+            return
+        }
+        if let data = cache.loadData(imageUrlString) {
+            completionHanlder(data, nil)
             return
         }
         let request = session.request(url: imageURL)

@@ -29,10 +29,16 @@ class ListTableViewCell: UITableViewCell {
         activityIndicator.startAnimating()
         viewModel?.download() { (imageData, error) -> Void in
             guard let imageData = imageData,
-                error == nil else { return }
+                error == nil else {
+                    OperationQueue.main.addOperation { [weak self] in
+                        self?.activityIndicator.stopAnimating()
+                    }
+                    return
+            }
             OperationQueue.main.addOperation { [weak self] in
-                self?.imgView.image = UIImage(data: imageData as Data)
                 self?.activityIndicator.stopAnimating()
+                self?.imgView.image = UIImage(data: imageData as Data)
+                
             }
         }
     }
